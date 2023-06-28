@@ -4,37 +4,42 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
 } from "@nestjs/common";
 
+import { CreateNinjaDto } from "./dto/create-ninja-dto";
+import { UpdateNinjaDto } from "./dto/update-ninja-dto";
+import { NinjasService } from "./ninjas.service";
+
 @Controller("ninjas")
 export class NinjasController {
+  constructor(private readonly ninjasService: NinjasService) {}
+
   @Post()
-  create(@Body() createNinjaDto: object) {
-    // return this.ninjasService.create(createNinjaDto);
+  create(@Body() createNinjaDto: CreateNinjaDto) {
+    return this.ninjasService.create(createNinjaDto);
   }
 
   @Get()
   findBy(@Query() query: object) {
-    // return this.ninjasService.findAll();
-    return [query];
+    // TODO: apply filtering
+    return this.ninjasService.findAll();
   }
 
   @Get(":id")
   findOne(@Param("id") id: string) {
-    //  return this.ninjasService.findOne(+id);
-    return { id };
+    return this.ninjasService.findOne(+id);
   }
 
-  @Patch(":id")
-  update(@Param("id") id: string, @Body() updateNinjaDto: object) {
-    // return this.ninjasService.update(+id, updateNinjaDto);
+  @Put(":id")
+  update(@Param("id") id: string, @Body() updateNinjaDto: UpdateNinjaDto) {
+    return this.ninjasService.update(+id, updateNinjaDto);
   }
 
   @Delete(":id")
   remove(@Param("id") id: string) {
-    // return this.ninjasService.remove(+id);
+    return this.ninjasService.remove(+id);
   }
 }
