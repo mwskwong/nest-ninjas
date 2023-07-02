@@ -6,9 +6,11 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from "@nestjs/common";
 
 import { CreateUserDto } from "./dto/create-user.dto";
+import { FindByUserDto } from "./dto/find-by-user.dto";
 import { UpdateUserDto } from "./dto/update-user.dto";
 import { UsersService } from "./users.service";
 
@@ -22,8 +24,8 @@ export class UsersController {
   }
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
+  findBy(@Query() findByUserDto: FindByUserDto) {
+    return this.usersService.findBy(findByUserDto);
   }
 
   @Get(":id")
