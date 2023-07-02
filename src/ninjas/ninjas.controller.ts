@@ -4,12 +4,13 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
-  Put,
   Query,
 } from "@nestjs/common";
 
 import { CreateNinjaDto } from "./dto/create-ninja-dto";
+import { FindByNinjaDto } from "./dto/find-by-ninja-dto";
 import { UpdateNinjaDto } from "./dto/update-ninja-dto";
 import { NinjasService } from "./ninjas.service";
 
@@ -23,9 +24,8 @@ export class NinjasController {
   }
 
   @Get()
-  findBy(@Query() query: object) {
-    // TODO: apply filtering
-    return this.ninjasService.findAll();
+  findBy(@Query() findByNinjaDto: FindByNinjaDto) {
+    return this.ninjasService.findBy(findByNinjaDto);
   }
 
   @Get(":id")
@@ -33,7 +33,7 @@ export class NinjasController {
     return this.ninjasService.findOne(+id);
   }
 
-  @Put(":id")
+  @Patch(":id")
   update(@Param("id") id: string, @Body() updateNinjaDto: UpdateNinjaDto) {
     return this.ninjasService.update(+id, updateNinjaDto);
   }

@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
 import { CreateNinjaDto } from "./dto/create-ninja-dto";
+import { FindByNinjaDto } from "./dto/find-by-ninja-dto";
 import { UpdateNinjaDto } from "./dto/update-ninja-dto";
 import { Ninja } from "./entities/ninja.entity";
 import { Element } from "./enums/Element";
@@ -27,8 +28,13 @@ export class NinjasService {
     return this.dummyNinjas;
   }
 
-  findBy() {
-    return [];
+  findBy(findByNinjaDto: FindByNinjaDto) {
+    return this.dummyNinjas.filter(
+      ({ name, clan, element }) =>
+        (!findByNinjaDto.name || name === findByNinjaDto.name) &&
+        (!findByNinjaDto.clan || clan === findByNinjaDto.clan) &&
+        (!findByNinjaDto.element || element === findByNinjaDto.element)
+    );
   }
 
   findOne(id: number) {
