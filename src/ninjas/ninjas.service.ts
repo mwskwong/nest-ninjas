@@ -43,7 +43,14 @@ export class NinjasService {
 
   update(id: number, updateNinjaDto: UpdateNinjaDto) {
     const index = this.dummyNinjas.findIndex((ninja) => ninja.id === id);
-    if (index === -1) throw Error("Ninja not found");
+    if (index === -1) {
+      throw Error(
+        `Ninja ${id} not found. Available ninjas: ${JSON.stringify(
+          this.dummyNinjas
+        )}`
+      );
+    }
+
     const ninja = { ...this.dummyNinjas[index], ...updateNinjaDto };
     this.dummyNinjas[index] = ninja;
 
@@ -54,7 +61,14 @@ export class NinjasService {
 
   remove(id: number) {
     const index = this.dummyNinjas.findIndex((ninja) => ninja.id === id);
-    if (index === -1) throw Error("Ninja not found");
+    if (index === -1) {
+      throw Error(
+        `Ninja ${id} not found. Available ninjas: ${JSON.stringify(
+          this.dummyNinjas
+        )}`
+      );
+    }
+
     this.dummyNinjas.splice(index, 1);
 
     console.log(this.dummyNinjas);

@@ -1,7 +1,7 @@
 export enum Element {
-  Fire = "FIRE",
-  Water = "WATER",
-  Earth = "EARTH",
-  Wind = "WIND",
-  Lightning = "LIGHTNING",
+  Fire = "fire",
+  Water = "water",
+  Earth = "earth",
+  Wind = "wind",
+  Lightning = "lightning",
 }
