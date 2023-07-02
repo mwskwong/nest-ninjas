@@ -22,18 +22,17 @@ export class UsersService {
   }
 
   findOne(id: number) {
-    return this.usersRepository.findOneBy({ id });
+    return this.usersRepository.findOneByOrFail({ id });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(id);
-    if (user) {
-      Object.assign(user, updateUserDto);
-      return this.usersRepository.save(user);
-    }
+    Object.assign(user, updateUserDto);
+    return this.usersRepository.save(user);
   }
 
-  remove(id: number) {
-    return this.usersRepository.delete(id);
+  async remove(id: number) {
+    const user = await this.findOne(id);
+    return this.usersRepository.remove(user);
   }
 }
