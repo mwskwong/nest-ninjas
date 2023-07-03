@@ -1,8 +1,10 @@
 import {
   Body,
+  ConflictException,
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   ParseIntPipe,
   Patch,
@@ -10,6 +12,7 @@ import {
   Query,
   ValidationPipe,
 } from "@nestjs/common";
+import { EntityNotFoundError, QueryFailedError } from "typeorm";
 
 import { CreateUserDto } from "./dto/create-user.dto";
 import { FindByUserDto } from "./dto/find-by-user.dto";
@@ -21,8 +24,16 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  // TODO: check for duplicated name and email
+  async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
+    try {
+      return await this.usersService.create(createUserDto);
+    } catch (e) {
+      if (e instanceof QueryFailedError) {
+        // console.log(e);
+        throw new ConflictException();
+      }
+    }
   }
 
   @Get()
@@ -31,20 +42,32 @@ export class UsersController {
   }
 
   @Get(":id")
-  findOne(@Param("id", ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
+  async findOne(@Param("id", ParseIntPipe) id: number) {
+    try {
+      return await this.usersService.findOne(id);
+    } catch (e) {
+      if (e instanceof EntityNotFoundError) throw new NotFoundException();
+    }
   }
 
   @Patch(":id")
-  update(
+  async update(
     @Param("id", ParseIntPipe) id: number,
     @Body(new ValidationPipe()) updateUserDto: UpdateUserDto
   ) {
-    return this.usersService.update(id, updateUserDto);
+    try {
+      return await this.usersService.update(id, updateUserDto);
+    } catch (e) {
+      if (e instanceof EntityNotFoundError) throw new NotFoundException();
+    }
   }
 
   @Delete(":id")
-  remove(@Param("id", ParseIntPipe) id: number) {
-    return this.usersService.remove(id);
+  async remove(@Param("id", ParseIntPipe) id: number) {
+    try {
+      return await this.usersService.remove(id);
+    } catch (e) {
+      if (e instanceof EntityNotFoundError) throw new NotFoundException();
+    }
   }
 }
