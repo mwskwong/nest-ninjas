@@ -24,14 +24,15 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  // TODO: check for duplicated name and email
   async create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) {
     try {
       return await this.usersService.create(createUserDto);
     } catch (e) {
       if (e instanceof QueryFailedError) {
-        // console.log(e);
-        throw new ConflictException();
+        switch (e.driverError.code) {
+          case "ER_DUP_ENTRY":
+            throw new ConflictException("Duplicated user name or email");
+        }
       }
     }
   }
