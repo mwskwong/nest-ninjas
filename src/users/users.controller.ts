@@ -31,7 +31,7 @@ export class UsersController {
       if (e instanceof QueryFailedError) {
         switch (e.driverError.code) {
           case "ER_DUP_ENTRY":
-            throw new ConflictException("Duplicated user name or email");
+            throw new ConflictException("Duplicated user entry");
         }
       }
     }
